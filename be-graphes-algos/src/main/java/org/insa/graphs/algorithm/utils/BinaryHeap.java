@@ -164,7 +164,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 		        }
 		        //Si, en sortant de la boucle while, on n'a pas trouvé l'élément, on renvoie une exception
 		        if (!trouve) {
-		        	throw new ElementNotFoundException("L'élément n'a pas été trouvé dans le tas");
+		        	throw new ElementNotFoundException(x);
 		        }
 		        else {
 		        	//si l'élément a été trouvé, on l'échange avec le dernier élément...
@@ -181,7 +181,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     	}
     	//Si le tas est vide, on renvoie une exception
     	else {
-    		throw new ElementNotFoundException("Le tas est vide");
+    		throw new ElementNotFoundException(x);
     	}
     }
 
