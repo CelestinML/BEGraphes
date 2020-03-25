@@ -134,10 +134,55 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
         this.arraySet(index, x);
         this.percolateUp(index);
     }
-
+    
     @Override
     public void remove(E x) throws ElementNotFoundException {
-        // TODO:
+    	//Si le tas est vide, il est inutile de chercher l'élément, on vérifie donc que le tas n'est pas vide
+    	if (!this.isEmpty()) {
+    		//Si le premier élément du tableau est celui qu'on veut supprimer
+    		//il suffit de réutiliser la méthode deleteMin
+	    	if (x == this.findMin()) {
+	    		this.deleteMin();
+	    	}
+	    	//Si l'élément que l'on veut supprimer est le dernier du tas, on n'a qu'à
+	    	//décrémenter currentSize pour l'ignorer
+	    	else if (this.array.get(this.size() - 1) == x){
+	    		currentSize--;
+	    	}
+	    	//Si l'élément n'est pas aux extrémités
+	    	else {
+	    		//On cherche dans un premier temps le rang de l'élément en parcourant le tableau
+		        int index_element = 0;
+		        boolean trouve = false;
+		        while (index_element < this.size() && !trouve) {
+		        	if (this.array.get(index_element) == x) {
+		        		trouve = true;
+		        	}
+		        	else {
+		        		index_element++;
+		        	}
+		        }
+		        //Si, en sortant de la boucle while, on n'a pas trouvé l'élément, on renvoie une exception
+		        if (!trouve) {
+		        	throw new ElementNotFoundException("L'élément n'a pas été trouvé dans le tas");
+		        }
+		        else {
+		        	//si l'élément a été trouvé, on l'échange avec le dernier élément...
+			        E auxiliaire = this.array.get(this.size() - 1);
+			        this.arraySet(this.size() - 1, this.array.get(index_element));
+			        this.arraySet(index_element, auxiliaire);
+			        //On décrémente la currentSize pour ignorer l'élément supprimé...
+			        this.currentSize--;
+			        //Puis on replace le tas dans un ordre correct
+			        this.percolateUp(index_element);
+			        this.percolateDown(index_element);
+		        }
+	    	}
+    	}
+    	//Si le tas est vide, on renvoie une exception
+    	else {
+    		throw new ElementNotFoundException("Le tas est vide");
+    	}
     }
 
     @Override
