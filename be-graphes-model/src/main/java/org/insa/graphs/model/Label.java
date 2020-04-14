@@ -21,6 +21,10 @@ public class Label  implements Comparable<Label> {
 		return sommet_courant;
 	}
 	
+	public Arc getFather() {
+		return pere;
+	}
+	
 	public boolean isMarked() {
 		return marque;
 	}
