@@ -27,6 +27,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Graph graph = data.getGraph();
         List<Node> nodes = graph.getNodes();
         final int nbNodes = graph.size();
+        
+        //On récupère l'index du node origine du chemin à déterminer
+        int index_origine = data.getOrigin().getId();
+        //On récupère l'index du node destination
+        int index_dest = data.getDestination().getId();
+        
+        notifyOriginProcessed(data.getOrigin());
 
         /////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////INITIALISATION/////////////////////////////////////////////
@@ -37,8 +44,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         for (int i = 0; i < nbNodes; i++) {
         	labels.add(new Label(nodes.get(i)));
         }
-        //On récupère l'index du node origine du chemin à déterminer
-        int index_origine = data.getOrigin().getId();
         //On actualise le cout du label correspondant au node d'origine
         labels.get(index_origine).setCost(0);
         //On insère le label actualisé dans le tas
@@ -47,16 +52,34 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		//////////////////////////////////////INITIALISATION/////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////
         
-        int index_dest = data.getDestination().getId();
-        
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////ITERATIONS//////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-        while (!labels.get(index_dest).isMarked()) {
+        
+        //Définition d'une variable pour compter le nombre d'itérations pour le debogage
+        int nbIterations = 0;
+        
+        while (!labels.get(index_dest).isMarked() && tas.size() != 0) {
         	//On récupère le label minimal dans le tas
         	Label label_min = tas.deleteMin();
         	//On marque le label minimal
         	labels.get(label_min.getNode().getId()).mark();
+        	
+        	//Vérification du coût croissant des labels marqués
+        	System.out.println("Coût du label marqué : " + label_min.getCost());
+        	//Vérification de la taille du tas
+        	System.out.println("Taille du tas : " + tas.size());
+        	//Incrémentation du nombre d'itérations
+        	nbIterations++;
+        	//Verification du tas
+        	if (tas.isValid()) {
+        		System.out.println("Tas valide");
+        	}
+        	else {
+        		System.out.println("Tas non valide");
+        	}
+        	
+        	
         	//On récupère les arcs successeurs du label minimal
         	List<Arc> arcs = label_min.getNode().getSuccessors();
         	for (int i = 0; i < arcs.size(); i++) {
@@ -64,13 +87,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 if (!data.isAllowed(arcs.get(i))) {
                     continue;
                 }
-                //On récupère l'index de la destination du chemin
+                //On récupère l'index de la destination de l'arc actuel
         		int index_suiv = arcs.get(i).getDestination().getId();
         		
         		if (!labels.get(index_suiv).isMarked())
         		{
         			double oldDistance = labels.get(index_suiv).getCost();
-        			double newDistance = label_min.getCost() + arcs.get(i).getMinimumTravelTime();
+        			double newDistance = label_min.getCost() + data.getCost(arcs.get(i));
         			
         			//Coloration des chemins au fur et à mesure
         			if (Double.isInfinite(oldDistance) && Double.isFinite(newDistance)) {
@@ -80,11 +103,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         			if (newDistance < oldDistance) {
         				labels.get(index_suiv).setCost(newDistance);
         				labels.get(index_suiv).setFather(arcs.get(i));
-        				try {
+        				if (Double.isFinite(oldDistance)) {
         					tas.remove(labels.get(index_suiv));
-        				}
-        				catch (ElementNotFoundException e) {
-        					//System.out.println("Essai pour retirer un élément non présent.");
         				}
         				tas.insert(labels.get(index_suiv));
         			}
@@ -101,7 +121,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         ShortestPathSolution solution = null;
         
         //La destination n'a pas de prédécesseur, le chemin est infaisable
-        if (labels.get(index_dest) == null) {
+        if (!labels.get(index_dest).isMarked()) {
             solution = new ShortestPathSolution(data, Status.INFEASIBLE);
         }
         else {
@@ -114,9 +134,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             Arc arc = labels.get(index_dest).getFather();
             while (arc != null) {
                 chemin.add(arc);
-                arc = labels.get(index_dest).getFather();
+                arc = labels.get(arc.getOrigin().getId()).getFather();
             }
-
+            
+            //Affichages pour le debuggage
+            System.out.println("Nombre d'itérations : " + nbIterations);
+            System.out.println("Nombre d'arcs dans le plus court chemin : " + chemin.size());
+            
             //On inverse ce chemin
             Collections.reverse(chemin);
 
