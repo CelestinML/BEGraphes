@@ -17,6 +17,10 @@ public class Label  implements Comparable<Label> {
 		return cout;
 	}
 	
+	public double getTotalCost() {
+		return this.getCost();
+	}
+	
 	public Node getNode() {
 		return sommet_courant;
 	}
@@ -43,11 +47,19 @@ public class Label  implements Comparable<Label> {
 	}
 	
 	@Override public int compareTo(Label other) {
-		if (this.cout < other.getCost()) {
+		if (this.getTotalCost() < other.getTotalCost()) {
 			return -1;
 		}
-		else if (this.cout == other.getCost()) {
-			return 0;
+		else if (this.getTotalCost() == other.getTotalCost()) {
+			if (this.getCost() < other.getCost()) {
+				return -1;
+			}
+			else if (this.getCost() > other.getCost()) {
+				return 1;
+			}
+			else {
+				return 0;
+			}
 		}
 		else {
 			return 1;

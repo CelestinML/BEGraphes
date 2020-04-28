@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.insa.graphs.algorithm.AbstractInputData;
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
 import org.insa.graphs.algorithm.utils.ElementNotFoundException;
@@ -12,6 +13,7 @@ import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Path;
 import org.insa.graphs.model.Label;
+import org.insa.graphs.model.LabelStar;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
@@ -39,10 +41,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         //////////////////////////////////////INITIALISATION/////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////
         BinaryHeap<Label> tas = new BinaryHeap<Label>();
-        ArrayList<Label> labels = new ArrayList<Label>();
+        ArrayList<LabelStar> labels = new ArrayList<LabelStar>();
         //On initialise tous les labels à +infini, avec marque à false et pere à NULL
         for (int i = 0; i < nbNodes; i++) {
-        	labels.add(new Label(nodes.get(i)));
+        	labels.add(new LabelStar(nodes.get(i), graph.get(index_dest)));
         }
         //On actualise le cout du label correspondant au node d'origine
         labels.get(index_origine).setCost(0);
@@ -69,6 +71,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	System.out.println("Coût du label marqué : " + label_min.getCost());
         	//Vérification de la taille du tas
         	System.out.println("Taille du tas : " + tas.size());
+        	
+        	//Debogage
         	//Incrémentation du nombre d'itérations
         	nbIterations++;
         	//Verification du tas
@@ -82,6 +86,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	
         	//On récupère les arcs successeurs du label minimal
         	List<Arc> arcs = label_min.getNode().getSuccessors();
+        	
+        	//Debogage
+        	System.out.println("Nb successeurs du label : " + arcs.size());
+        	
         	for (int i = 0; i < arcs.size(); i++) {
         		//On vérifie que le chemin est autorisé
                 if (!data.isAllowed(arcs.get(i))) {
@@ -137,7 +145,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 arc = labels.get(arc.getOrigin().getId()).getFather();
             }
             
-            //Affichages pour le debuggage
+            //Affichages pour le debogage
             System.out.println("Nombre d'itérations : " + nbIterations);
             System.out.println("Nombre d'arcs dans le plus court chemin : " + chemin.size());
             
@@ -146,6 +154,21 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
             //On crée la solution finale
             solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, chemin));
+            
+            //Debogage
+            if (!solution.getPath().isValid()) {
+            	System.out.println("Chemin trouvé non valide.");
+            }
+            else {
+            	System.out.println("Chemin trouvé valide.");
+            }
+            if (data.getMode() == AbstractInputData.Mode.TIME) {
+            	System.out.println("Durée chemin Path : " + solution.getPath().getMinimumTravelTime() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            }
+            else {
+            	System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            }
+            
         }
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////CREATION DE LA SOLUTION////////////////////////////////////////
