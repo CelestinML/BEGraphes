@@ -56,7 +56,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 		/////////////////////////////////////////////////////////////////////////////////////////////////
         
         //Définition d'une variable pour compter le nombre d'itérations pour le debogage
-        int nbIterations = 0;
+        /*int nbIterations = 0;*/
         
         while (!labels.get(index_dest).isMarked() && tas.size() != 0) {
         	//On récupère le label minimal dans le tas
@@ -71,14 +71,14 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         	
         	//Debogage
         	//Incrémentation du nombre d'itérations
-        	nbIterations++;
+        	/*nbIterations++;
         	//Verification du tas
         	if (tas.isValid()) {
-        		//System.out.println("Tas valide");
+        		System.out.println("Tas valide");
         	}
         	else {
-        		//System.out.println("Tas non valide");
-        	}
+        		System.out.println("Tas non valide");
+        	}*/
         	
         	
         	//On récupère les arcs successeurs du label minimal
