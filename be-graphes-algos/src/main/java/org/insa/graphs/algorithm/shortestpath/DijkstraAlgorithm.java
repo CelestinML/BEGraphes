@@ -12,8 +12,6 @@ import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Path;
-import org.insa.graphs.model.Label;
-import org.insa.graphs.model.LabelStar;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
@@ -41,10 +39,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         //////////////////////////////////////INITIALISATION/////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////
         BinaryHeap<Label> tas = new BinaryHeap<Label>();
-        ArrayList<LabelStar> labels = new ArrayList<LabelStar>();
+        ArrayList<Label> labels = new ArrayList<Label>();
         //On initialise tous les labels à +infini, avec marque à false et pere à NULL
         for (int i = 0; i < nbNodes; i++) {
-        	labels.add(new LabelStar(nodes.get(i), graph.get(index_dest)));
+        	labels.add(new Label(nodes.get(i)));
         }
         //On actualise le cout du label correspondant au node d'origine
         labels.get(index_origine).setCost(0);
