@@ -9,11 +9,17 @@ import java.io.FileInputStream;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import org.insa.graphs.algorithm.ArcInspector;
+import org.insa.graphs.algorithm.ArcInspectorFactory;
+import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.ShortestPathAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
 import org.insa.graphs.gui.drawing.Drawing;
 import org.insa.graphs.gui.drawing.components.BasicDrawing;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Path;
 import org.insa.graphs.model.io.BinaryGraphReader;
+import org.insa.graphs.model.io.BinaryPathReader;
 import org.insa.graphs.model.io.GraphReader;
 import org.insa.graphs.model.io.PathReader;
 
@@ -46,28 +52,36 @@ public class Launch {
     public static void main(String[] args) throws Exception {
 
         // Visit these directory to see the list of available files on Commetud.
-        final String mapName = "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
+        final String mapName = "C:\\Users\\celes\\Desktop\\BEGraphes\\BEGraphes\\Carte\\insa.mapgr";
         final String pathName = "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31insa_rangueil_r2.path";
 
         // Create a graph reader.
         final GraphReader reader = new BinaryGraphReader(
                 new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
 
-        // TODO: Read the graph.
-        final Graph graph = null;
-
+        //Read the graph.
+        final Graph graph = reader.read();
+        
+        ArcInspector inspector = ArcInspectorFactory.getAllFilters().get(0);
+        ShortestPathData data = new ShortestPathData(graph, graph.get(0), graph.get(graph.size()-1), inspector);
+        DijkstraAlgorithm algo = new DijkstraAlgorithm(data);
+        
         // Create the drawing:
         final Drawing drawing = createDrawing();
 
-        // TODO: Draw the graph on the drawing.
+        //Draw the graph on the drawing.
+        drawing.drawGraph(graph);
 
-        // TODO: Create a PathReader.
-        final PathReader pathReader = null;
+        //Create a PathReader.
+        //final PathReader pathReader = new BinaryPathReader(
+        //		new DataInputStream(new BufferedInputStream(new FileInputStream(pathName))));
 
-        // TODO: Read the path.
-        final Path path = null;
-
-        // TODO: Draw the path.
+        //Read the path.
+        //final Path path = pathReader.readPath(graph);
+        Path path = algo.run().getPath();
+        
+        //Draw the path.
+        drawing.drawPath(path);
     }
 
 }

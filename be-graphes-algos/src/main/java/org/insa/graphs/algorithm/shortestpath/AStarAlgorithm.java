@@ -56,7 +56,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 		/////////////////////////////////////////////////////////////////////////////////////////////////
         
         //Définition d'une variable pour compter le nombre d'itérations pour le debogage
-        /*int nbIterations = 0;*/
+        int nbIterations = 0;
         
         while (!labels.get(index_dest).isMarked() && tas.size() != 0) {
         	//On récupère le label minimal dans le tas
@@ -64,28 +64,29 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         	//On marque le label minimal
         	labels.get(label_min.getNode().getId()).mark();
         	
-        	//Vérification du coût croissant des labels marqués
-        	//System.out.println("Coût du label marqué : " + label_min.getCost());
-        	//Vérification de la taille du tas
-        	//System.out.println("Taille du tas : " + tas.size());
+        	//On récupère les arcs successeurs du label minimal
+        	List<Arc> arcs = label_min.getNode().getSuccessors();
         	
         	//Debogage
+        	
+        	//Vérification du coût croissant des labels marqués
+        	System.out.println("Coût total du label marqué : " + label_min.getTotalCost());
+        	//Vérification de la taille du tas
+        	System.out.println("Taille du tas : " + tas.size());
+        	//Vérification du nombre de successeurs
+        	System.out.println("Nb successeurs du label : " + arcs.size());
+        	
         	//Incrémentation du nombre d'itérations
-        	/*nbIterations++;
-        	//Verification du tas
+        	nbIterations++;
+        	//Verification du tas (Commenté par défaut car ralentit trop l'exécution)
+        	/*
         	if (tas.isValid()) {
         		System.out.println("Tas valide");
         	}
         	else {
         		System.out.println("Tas non valide");
-        	}*/
-        	
-        	
-        	//On récupère les arcs successeurs du label minimal
-        	List<Arc> arcs = label_min.getNode().getSuccessors();
-        	
-        	//Debogage
-        	//System.out.println("Nb successeurs du label : " + arcs.size());
+        	}
+        	*/
         	
         	for (int i = 0; i < arcs.size(); i++) {
         		//On vérifie que le chemin est autorisé
@@ -143,8 +144,8 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
             }
             
             //Affichages pour le debogage
-            //System.out.println("Nombre d'itérations : " + nbIterations);
-            //System.out.println("Nombre d'arcs dans le plus court chemin : " + chemin.size());
+            System.out.println("Nombre d'itérations : " + nbIterations);
+            System.out.println("Nombre d'arcs dans le plus court chemin : " + chemin.size());
             
             //On inverse ce chemin
             Collections.reverse(chemin);
@@ -154,16 +155,16 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
             
             //Debogage
             if (!solution.getPath().isValid()) {
-            	//System.out.println("Chemin trouvé non valide.");
+            	System.out.println("Chemin trouvé non valide.");
             }
             else {
-            	//System.out.println("Chemin trouvé valide.");
+            	System.out.println("Chemin trouvé valide.");
             }
             if (data.getMode() == AbstractInputData.Mode.TIME) {
-            	//System.out.println("Durée chemin Path : " + solution.getPath().getMinimumTravelTime() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            	System.out.println("Durée chemin Path : " + solution.getPath().getMinimumTravelTime() + ", AStar : " + labels.get(index_dest).getCost());
             }
             else {
-            	//System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            	System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", AStar : " + labels.get(index_dest).getCost());
             }
             
         }
