@@ -21,6 +21,8 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
     @Override
     protected ShortestPathSolution doRun() {
     	
+    	long t1 = System.nanoTime();
+    	
     	// Retrieve the graph.
         ShortestPathData data = getInputData();
         Graph graph = data.getGraph();
@@ -68,13 +70,14 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         	List<Arc> arcs = label_min.getNode().getSuccessors();
         	
         	//Debogage
-        	
+        	/*
         	//Vérification du coût croissant des labels marqués
         	System.out.println("Coût total du label marqué : " + label_min.getTotalCost());
         	//Vérification de la taille du tas
         	System.out.println("Taille du tas : " + tas.size());
         	//Vérification du nombre de successeurs
         	System.out.println("Nb successeurs du label : " + arcs.size());
+        	*/
         	
         	//Incrémentation du nombre d'itérations
         	nbIterations++;
@@ -145,7 +148,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
             
             //Affichages pour le debogage
             System.out.println("Nombre d'itérations : " + nbIterations);
-            System.out.println("Nombre d'arcs dans le plus court chemin : " + chemin.size());
+            //System.out.println("Nombre d'arcs dans le plus court chemin : " + chemin.size());
             
             //On inverse ce chemin
             Collections.reverse(chemin);
@@ -154,6 +157,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
             solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, chemin));
             
             //Debogage
+            /*
             if (!solution.getPath().isValid()) {
             	System.out.println("Chemin trouvé non valide.");
             }
@@ -166,12 +170,17 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
             else {
             	System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", AStar : " + labels.get(index_dest).getCost());
             }
+            */
             
         }
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////CREATION DE LA SOLUTION////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
+        long t2 = System.nanoTime();
+        long tempsExec = t2-t1;
+        System.out.println("Temps d'exécution AStar : " + tempsExec/Math.pow(10, 9));
+        
         return solution;
     }
 

@@ -22,6 +22,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     @Override
     protected ShortestPathSolution doRun() {
     	
+    	long t1 = System.nanoTime();
     	// Retrieve the graph.
         ShortestPathData data = getInputData();
         Graph graph = data.getGraph();
@@ -77,17 +78,18 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	//Vérification du nombre de successeurs
         	System.out.println("Nb successeurs du label : " + arcs.size());
         	
+        	
         	//Incrémentation du nombre d'itérations
         	nbIterations++;
         	//Verification du tas (Commenté par défaut car ralentit trop l'exécution)
-        	/*
+        	
         	if (tas.isValid()) {
         		System.out.println("Tas valide");
         	}
         	else {
         		System.out.println("Tas non valide");
         	}
-        	*/
+        	
         	
         	for (int i = 0; i < arcs.size(); i++) {
         		//On vérifie que le chemin est autorisé
@@ -155,6 +157,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, chemin));
             
             //Debogage
+            
             if (!solution.getPath().isValid()) {
             	System.out.println("Chemin trouvé non valide.");
             }
@@ -168,11 +171,16 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             	System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", Dijkstra : " + labels.get(index_dest).getCost());
             }
             
+            
         }
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////CREATION DE LA SOLUTION////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
+        long t2 = System.nanoTime();
+        long tempsExec = t2-t1;
+        System.out.println("Temps d'exécution Dijkstra : " + tempsExec/Math.pow(10, 9));
+        
         return solution;
     }
 

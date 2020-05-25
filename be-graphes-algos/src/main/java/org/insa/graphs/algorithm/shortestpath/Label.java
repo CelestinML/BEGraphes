@@ -49,20 +49,31 @@ public class Label  implements Comparable<Label> {
 		this.cout = cout;
 	}
 	
+	protected boolean thresholdBasedFloatsComparison(double v1, double v2) 
+	{
+	    final double THRESHOLD = .0001;
+	 
+	    if (Math.abs(v1 - v2) < THRESHOLD)
+	        return true;
+	    else
+	        return false;
+	}
+	
 	@Override public int compareTo(Label other) {
-		if (this.getTotalCost() < other.getTotalCost()) {
-			return -1;
-		}
-		else if (this.getTotalCost() == other.getTotalCost()) {
-			if (this.getCost() < other.getCost()) {
-				return -1;
-			}
-			else if (this.getCost() > other.getCost()) {
-				return 1;
-			}
-			else {
+		
+		if (thresholdBasedFloatsComparison(this.getTotalCost(), other.getTotalCost())) {
+			if (thresholdBasedFloatsComparison(this.getCost(), other.getCost())) {
 				return 0;
 			}
+			else if (this.getCost() < other.getCost()) {
+				return -1;
+			}
+			else {
+				return 1;
+			}
+		}
+		else if (this.getTotalCost() < other.getTotalCost()) {
+			return -1;
 		}
 		else {
 			return 1;
